@@ -1,0 +1,32 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// belongs to one Order
+model Item {
+    id      String @id @default(cuid())
+    order   Order  @relation(fields: [orderId], references: [id])
+    orderId String
+    url     String
+    size    String
+}
+
+// User (customer) has orders
+model User {
+    id     String  @id @default(cuid())
+    tg     String  @unique
+    orders Order[]
+}
+
+// belongs to one User (customer)
+model Order {
+    id     String @id @default(cuid())
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+    items  Item[]
+}

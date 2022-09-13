@@ -4,11 +4,33 @@ const GlobalStyle = createGlobalStyle`
     :root {
         /* MOBILE SIZE (default) */
 
+        /* COLOR VARIABLES */
+        // neutrals
+        --clr-ntrl-min: hsl(0, 0%, 100%);
+        --clr-ntrl-max: hsl(0, 0%, 0%);
+
+        /* base color, with one tint, and one shade - body and typogaphry is generally the base colour */
+        --clr-base: hsl(0, 0%, 0%);
+        --clr-base-lt: hsl(0, 0%, 20%);
+        --clr-bg-base: hsl(0, 0%, 100%);
+
+        /* primary brand color */
+        --clr-primary: hsl(55, 88%, 72%);
+        --clr-primar-test: hsl(30, 90%, 80%);
+
         /* FONT */
-        --font-serif: 'Roboto', -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue',
+        --ff-base: 'Roboto', -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue',
         'Helvetica', sans-serif;
-        --basic-font-size: 18px;
-        --basic-font-weight: 400;
+        --fs-base: 18px;
+        --fw-base: 400;
+
+        /* SHAPES */
+        --brad-base: 1rem;
+
+        /* SPACE */
+        --layout-pdng: 1rem;
+        --block-spacing: 1rem;
+        --el-spacing: .5rem;
     }
 
     *,
@@ -23,9 +45,9 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         overscroll-behavior-x: none;
-        font-family: var(--font-serif);
-        font-size: var(--basic-font-size);
-        font-weight: var(--basic-font-weight);
+        font-family: var(--ff-base);
+        font-size: var(--fs-base);
+        font-weight: var(--fw-base);
         /* color: var(--text-primary-color);
         background-color: var(--background-primary-color); */
         -webkit-tap-highlight-color: transparent;

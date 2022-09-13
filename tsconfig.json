@@ -19,6 +19,11 @@
             "@/components/*": ["src/components/*"],
             "@/styles/*": ["src/styles/*"],
             "@/hooks/*": ["src/hooks/*"],
+            "@/contexts/*": ["src/contexts/*"],
+            "@/types/*": ["src/types/*"],
+            "@/lib/*": ["src/lib/*"],
+            "@/api/*": ["src/api/*"],
+            "@/helpers/*": ["src/helpers/*"],
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
