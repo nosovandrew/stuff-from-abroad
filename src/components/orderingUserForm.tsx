@@ -3,8 +3,10 @@ import { ChangeEventHandler } from 'react';
 
 import { User } from '@/types/user';
 
-const Container = styled.div`
-    margin: 1rem auto;
+import TextInput from './ui/textInput';
+import Block from './ui/block';
+
+const Container = styled(Block)`
     display: flex;
     flex-direction: column;
 `;
@@ -17,9 +19,8 @@ type OrderingUserFormProps = {
 const OrderingUserForm = ({ user, handleChange }: OrderingUserFormProps) => {
     return (
         <Container>
-            <input
-                type="text"
-                placeholder="Ваш Telegram"
+            <TextInput
+                placeholder="Telegram"
                 name="tgName"
                 value={user.tg}
                 onChange={handleChange('tg')}

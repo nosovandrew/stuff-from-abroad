@@ -3,10 +3,37 @@ import { ChangeEventHandler } from 'react';
 
 import { Item } from '@/types/item';
 
-const Container = styled.div`
-    margin: 1rem auto;
+import TextInput from './ui/textInput';
+import Block from './ui/block';
+import { RawBtn } from './ui/button';
+import SvgPlus from './svgIcons/Plus';
+import { media } from '@/styles/media';
+
+const Container = styled(Block)`
     display: flex;
     gap: 0.5rem;
+`;
+
+const InputsContainer = styled.div`
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+`;
+
+const AddBtn = styled(RawBtn)`
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 1rem;
+    background-color: var(--clr-base-dk);
+    border-radius: 1rem;
+    // svg icon
+    line-height: 0;
+    font-size: 1rem;
+
+    ${media.lg} {
+        font-size: 1.5rem;
+    }
 `;
 
 type AddItemFormProps = {
@@ -21,26 +48,26 @@ const AddItemForm = ({ newItem, handleChange, handleAddItem }: AddItemFormProps)
 
     return (
         <Container>
-            <input
-                type="text"
-                placeholder="Ссылка"
-                name="itemUrl"
-                value={url}
-                onChange={handleChange('url')}
-            />
-            <input
-                type="text"
-                placeholder="Размер"
-                name="itemSize"
-                value={size}
-                onChange={handleChange('size')}
-            />
-            <button
+            <InputsContainer>
+                <TextInput
+                    placeholder="Ссылка"
+                    name="itemUrl"
+                    value={url}
+                    onChange={handleChange('url')}
+                />
+                <TextInput
+                    placeholder="Размер"
+                    name="itemSize"
+                    value={size}
+                    onChange={handleChange('size')}
+                />
+            </InputsContainer>
+            <AddBtn
                 type="button"
                 onClick={handleAddItem}
             >
-                Добавить
-            </button>
+                <SvgPlus />
+            </AddBtn>
         </Container>
     );
 };

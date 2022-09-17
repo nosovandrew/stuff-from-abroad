@@ -5,16 +5,17 @@ import useCollectOrderForm from '@/hooks/useCollectOrderForm';
 import AddItemForm from '@/components/addItemForm';
 import OrderItem from '@/components/orderItem';
 import OrderingUserForm from '@/components/orderingUserForm';
+import Layout from '@/components/layout';
+import { CommonBtn } from '@/components/ui/button';
+import { SuccessNotification, ErrorNotification } from '@/components/ui/notification';
 
 const StyledForm = styled.form`
     width: 100%;
-    min-height: calc(100vh - var(--layout-pdng));
-    padding: var(--layout-pdng);
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
+    gap: 1rem;
 `;
 
 const IndexPage = () => {
@@ -32,33 +33,46 @@ const IndexPage = () => {
     } = useCollectOrderForm();
 
     return (
-        <StyledForm onSubmit={handleSubmit}>
-            <h1>Соберите заказ</h1>
-            <OrderingUserForm
-                {...{ user: { tg: orderFields.tg }, handleChange }}
-            />
-            {items.map((item, index) => (
-                <OrderItem
-                    key={index}
-                    {...{ item, idx: index, handleRemoveItem }}
+        <Layout>
+            <h1>Русский модный клуб</h1>
+            <StyledForm onSubmit={handleSubmit}>
+                {items.map((item, index) => (
+                    <OrderItem
+                        key={index}
+                        {...{ item, idx: index, handleRemoveItem }}
+                    />
+                ))}
+                <AddItemForm
+                    {...{
+                        newItem: {
+                            url: orderFields.url,
+                            size: orderFields.size,
+                        },
+                        handleChange,
+                        handleAddItem,
+                    }}
                 />
-            ))}
-            <AddItemForm
-                {...{
-                    newItem: { url: orderFields.url, size: orderFields.size },
-                    handleChange,
-                    handleAddItem,
-                }}
-            />
-            <button type="submit">Сделать заказ</button>
-            {/* test api service below */}
-            {submitService.status === 'loading' && <span></span>}
-            {submitService.status === 'loaded' && <span>✅</span>}
-            {submitService.status === 'loaded' && submitService.payload && (
-                <span>{`Код заказа: ${submitService.payload.id}`}</span>
-            )}
-            {(orderError || Object.keys(formValidationErrors).length !== 0) && <span>🚫</span>}
-        </StyledForm>
+                <OrderingUserForm
+                    {...{ user: { tg: orderFields.tg }, handleChange }}
+                />
+                <CommonBtn type="submit">
+                    {submitService.status === 'loading'
+                        ? 'Делаем...'
+                        : 'Сделать заказ'}
+                </CommonBtn>
+                {/* handling api service below */}
+                {submitService.status === 'loaded' && submitService.payload && (
+                    <SuccessNotification>
+                        <span>{`Код заказа: ${submitService.payload.id}`}</span>
+                    </SuccessNotification>
+                )}
+                {orderError && (
+                    <ErrorNotification>
+                        <span>{orderError}</span>
+                    </ErrorNotification>
+                )}
+            </StyledForm>
+        </Layout>
     );
 };
 

@@ -66,7 +66,9 @@ const useCollectOrderForm = () => {
         // check order obj (not implemented!)
         if (items.length === 0) {
             // throw error
-            setOrderError('Добавьте хотя бы один айтем.');
+            setOrderError('Добавьте хотя бы один товар');
+            // remove error after 5 sec
+            setTimeout(() => setOrderError(undefined), 5000)
             return;
         }
         // collect order
@@ -81,6 +83,8 @@ const useCollectOrderForm = () => {
         // reset form and items array
         handleReset();
         setItems([]);
+        // reset order errors
+        setOrderError(undefined);
     };
 
     return {
