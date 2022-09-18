@@ -28,11 +28,11 @@ const useCollectOrderForm = () => {
             tg: {
                 required: {
                     value: true,
-                    message: 'Нам нужен ваш Телеграм для обратной связи.'
-                }
+                    message: 'Нам нужен ваш Телеграм для обратной связи.',
+                },
             },
             // url pattern ??? (no spaces, no quotes, starts with protocol)
-        }
+        },
     });
     const [items, setItems] = useState<Item[]>([]); // items array state
     const { service, createOrder } = useCreateOrderService(); // get api service (communication with backend)
@@ -54,13 +54,11 @@ const useCollectOrderForm = () => {
     };
     const handleRemoveItem = (idx: number) => {
         // make new array without deleted element
-        const updatedItems = items.filter(
-            (_item, itemIdx) => itemIdx !== idx
-        );
+        const updatedItems = items.filter((_item, itemIdx) => itemIdx !== idx);
         // update state
         setItems(updatedItems);
     };
-    
+
     /* HELPERS */
     const collectAndSendOrder = async () => {
         // check order obj (not implemented!)
@@ -68,7 +66,7 @@ const useCollectOrderForm = () => {
             // throw error
             setOrderError('Добавьте хотя бы один товар');
             // remove error after 5 sec
-            setTimeout(() => setOrderError(undefined), 5000)
+            setTimeout(() => setOrderError(undefined), 5000);
             return;
         }
         // collect order
@@ -77,14 +75,19 @@ const useCollectOrderForm = () => {
                 tg: orderFields.tg,
             },
             items,
-        }
+        };
         // create and save new order in database
-        await createOrder(order);
-        // reset form and items array
-        handleReset();
-        setItems([]);
-        // reset order errors
-        setOrderError(undefined);
+        try {
+            await createOrder(order);
+            // reset form and items array
+            handleReset();
+            setItems([]);
+            // reset order errors
+            setOrderError(undefined);
+        } catch (error) {
+            // need to add error type and get error message
+            setOrderError('Ошибка запроса');
+        }
     };
 
     return {

@@ -3,13 +3,13 @@
 const makeApiRequest = async <T>(
     url: string,
     config: RequestInit = {}
-): Promise<T | undefined> => {
+): Promise<T> => {
     try {
         // make request
         const response = await fetch(url, config);
         // check error
         if (!response.ok) {
-            const message = `An error has occured: ${response.status}`;
+            const message = `Ошибка запроса: ${response.status}`;
             throw new Error(message);
         }
         // response processing
@@ -17,7 +17,7 @@ const makeApiRequest = async <T>(
 
         return parsedResponse;
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Service } from '@/types/apiService';
 import { Order } from '@/types/order';
+import { makeApiRequest } from '@/helpers/makeApiRequest';
 
 /* TYPES */
 type CreateOrderResponse = {
@@ -23,17 +24,16 @@ const useCreateOrderService = () => {
 
         // make post req to database
         try {
-            const result = await fetch('/api/order', {
+            const result = await makeApiRequest<CreateOrderResponse>('/api/order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(order),
-            });
-            const parsedResult = JSON.parse(await result.text()); // parse res from server
-            setService({ status: 'loaded', payload: parsedResult });
+            })
+            setService({ status: 'loaded', payload: result });
         } catch (error) {
             // need to add checking error type
-            console.error(error);
             setService({ status: 'error', error });
+            throw error;
         }
     };
 
