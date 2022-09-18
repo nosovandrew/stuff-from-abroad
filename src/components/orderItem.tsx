@@ -56,10 +56,12 @@ const OrderItem = ({ idx, item, handleRemoveItem }: OrderItemProps) => {
     // get item props
     const { url, size } = item;
 
+    const displayedUrl = url.replace(/(http)s?:\/\/(www.)?/, '') // cut protocol from url
+
     return (
         <Conatiner>
             <ItemInfo>
-                <span>{url}</span>
+                <span>{displayedUrl}</span>
                 <span>{size}</span>
             </ItemInfo>
             <DeleteBtn onClick={() => handleRemoveItem(idx)}>
