@@ -86,7 +86,7 @@ const useCollectOrderForm = () => {
             setOrderError(undefined);
         } catch (error) {
             // need to add error type and get error message
-            setOrderError('Ошибка запроса');
+            setOrderError('Ошибка при создании заказа');
         }
     };
 
