@@ -34,7 +34,7 @@ const IndexPage = () => {
 
     return (
         <Layout>
-            <h1>Русский модный клуб</h1>
+            <h1>Русский модный<br /> клуб</h1>
             <StyledForm onSubmit={handleSubmit}>
                 {items.map((item, index) => (
                     <OrderItem
