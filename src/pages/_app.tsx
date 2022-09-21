@@ -8,6 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Head>
                 {/* add fonts and other global seo tags */}
                 <link rel="shortcut icon" href="/icon.png" type="image/png" />
+                <title>rfc</title>
             </Head>
             <GlobalStyle />
             <Component {...pageProps} />
