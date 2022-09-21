@@ -8,7 +8,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "go": "next build && next start"
+        "go": "npm run build && npm run start"
     },
     "author": "tgch@rufaclub",
     "license": "ISC",
