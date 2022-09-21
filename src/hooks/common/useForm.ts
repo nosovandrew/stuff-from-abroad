@@ -65,7 +65,7 @@ const useForm = <T extends Record<keyof T, any> = {}>(options?: {
         };
 
     // sending completed form
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const validations = options?.validations;
         // check whether validators specified

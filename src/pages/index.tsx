@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useRef } from 'react';
 
 import useCollectOrderForm from '@/hooks/useCollectOrderForm';
 
@@ -7,9 +8,12 @@ import OrderItem from '@/components/orderItem';
 import OrderingUserForm from '@/components/orderingUserForm';
 import Layout from '@/components/layout';
 import { CommonBtn } from '@/components/ui/button';
-import { SuccessNotification, ErrorNotification } from '@/components/ui/notification';
+import {
+    SuccessNotification,
+    ErrorNotification,
+} from '@/components/ui/notification';
 
-const StyledForm = styled.form`
+const Container = styled.div`
     width: 100%;
 
     display: flex;
@@ -18,24 +22,40 @@ const StyledForm = styled.form`
     gap: 1rem;
 `;
 
+const StyledForm = styled.form`
+    width: 100%;
+`;
+
 const IndexPage = () => {
     // get logic for collecting order
     const {
-        orderFields,
         items,
-        handleChange,
-        handleSubmit,
-        handleAddItem,
+        itemFields,
+        handleChangeItem,
+        handleSubmitItem,
+        orderFields,
+        handleChangeOrder,
+        handleSubmitOrder,
         handleRemoveItem,
         submitService,
-        formValidationErrors,
-        orderError,
+        errors,
     } = useCollectOrderForm();
+
+    const orderFormRef = useRef<HTMLFormElement>(null); // init ref for form to submit outside <form> tag
+
+    const handleOutsideSubmit = () => {
+        orderFormRef.current?.dispatchEvent(
+            new Event('submit', { cancelable: true, bubbles: true })
+        );
+    };
 
     return (
         <Layout>
-            <h1>Русский модный<br /> клуб</h1>
-            <StyledForm onSubmit={handleSubmit}>
+            <h1>
+                Русский модный
+                <br /> клуб
+            </h1>
+            <Container>
                 {items.map((item, index) => (
                     <OrderItem
                         key={index}
@@ -45,17 +65,24 @@ const IndexPage = () => {
                 <AddItemForm
                     {...{
                         newItem: {
-                            url: orderFields.url,
-                            size: orderFields.size,
+                            url: itemFields.url,
+                            size: itemFields.size,
                         },
-                        handleChange,
-                        handleAddItem,
+                        handleChange: handleChangeItem,
+                        handleSubmit: handleSubmitItem,
+                        validationErrors: errors.itemFormErrors,
                     }}
                 />
-                <OrderingUserForm
-                    {...{ user: { tg: orderFields.tg }, handleChange }}
-                />
-                <CommonBtn type="submit">
+                <StyledForm ref={orderFormRef} onSubmit={handleSubmitOrder}>
+                    <OrderingUserForm
+                        {...{
+                            user: { tg: orderFields.tg },
+                            handleChange: handleChangeOrder,
+                            validationErrors: errors.mainFormErrors,
+                        }}
+                    />
+                </StyledForm>
+                <CommonBtn onClick={handleOutsideSubmit}>
                     {submitService.status === 'loading'
                         ? 'Делаем...'
                         : 'Сделать заказ'}
@@ -66,12 +93,12 @@ const IndexPage = () => {
                         <span>{`Код заказа: ${submitService.payload.id}`}</span>
                     </SuccessNotification>
                 )}
-                {orderError && (
+                {errors.orderError && (
                     <ErrorNotification>
-                        <span>{orderError}</span>
+                        <span>{errors.orderError}</span>
                     </ErrorNotification>
                 )}
-            </StyledForm>
+            </Container>
         </Layout>
     );
 };

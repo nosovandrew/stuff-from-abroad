@@ -5,24 +5,54 @@ import { Item } from '@/types/item';
 import { User } from '@/types/user';
 import { useCreateOrderService } from '@/api/order';
 import useForm from '@/hooks/common/useForm';
+import isValidUrl from '@/helpers/isValidUrl';
 
-type CollectOrderFormFields = User & Item; // union User and Item types for manage input fields
+type ItemFormFields = Item;
+
+type CollectOrderFormFields = User;
 
 const useCollectOrderForm = () => {
     /* STATE */
-    // set common form functionality
+    // set "add item" form functionality
     const {
-        handleChange,
-        handleSubmit,
-        handleReset,
+        handleChange: handleChangeItem,
+        handleSubmit: handleSubmitItem,
+        handleReset: handleResetItem,
+        data: itemFields,
+        errors: itemErrors,
+    } = useForm<ItemFormFields>({
+        onSubmit: () => addItem(), // logic for submit
+        initialValues: {
+            url: '',
+            size: '',
+        },
+        validations: {
+            // url pattern ??? (no spaces, no quotes, starts with protocol)
+            url: {
+                custom: {
+                    isValid: isValidUrl,
+                    message: 'Ссылка не указана, либо в ней есть ошибки!',
+                },
+            },
+            size: {
+                required: {
+                    value: true,
+                    message: 'Размер не указан!',
+                },
+            }
+        },
+    });
+    // set "collect and send order" form functionality
+    const {
+        handleChange: handleChangeOrder,
+        handleSubmit: handleSubmitOrder ,
+        handleReset: handleResetOrder,
         data: orderFields,
-        errors,
+        errors: orderErrors,
     } = useForm<CollectOrderFormFields>({
         onSubmit: () => collectAndSendOrder(), // logic for submit
         initialValues: {
             tg: '',
-            url: '',
-            size: '',
         },
         validations: {
             tg: {
@@ -31,7 +61,6 @@ const useCollectOrderForm = () => {
                     message: 'Нам нужен ваш Телеграм для обратной связи.',
                 },
             },
-            // url pattern ??? (no spaces, no quotes, starts with protocol)
         },
     });
     const [items, setItems] = useState<Item[]>([]); // items array state
@@ -39,19 +68,6 @@ const useCollectOrderForm = () => {
     const [orderError, setOrderError] = useState<string | undefined>(undefined); // error msg state for collecting order proccess
 
     /* SPECIAL HANDLERS */
-    const handleAddItem = () => {
-        // add new item to list of items
-        const newItem: Item = {
-            url: orderFields.url,
-            size: orderFields.size,
-        };
-        const updatedItems = [...items, newItem];
-        // update state
-        setItems(updatedItems);
-        // reset adding item form
-        handleReset('url');
-        handleReset('size');
-    };
     const handleRemoveItem = (idx: number) => {
         // make new array without deleted element
         const updatedItems = items.filter((_item, itemIdx) => itemIdx !== idx);
@@ -60,6 +76,20 @@ const useCollectOrderForm = () => {
     };
 
     /* HELPERS */
+    const addItem = () => {
+        // add new item to list of items
+        const newItem: Item = {
+            url: itemFields.url,
+            size: itemFields.size,
+        };
+        const updatedItems = [...items, newItem];
+        // update state
+        setItems(updatedItems);
+        // reset adding item form
+        handleResetItem('url');
+        handleResetItem('size');
+    };
+
     const collectAndSendOrder = async () => {
         // check order obj (not implemented!)
         if (items.length === 0) {
@@ -80,7 +110,8 @@ const useCollectOrderForm = () => {
         try {
             await createOrder(order);
             // reset form and items array
-            handleReset();
+            handleResetOrder();
+            handleResetItem();
             setItems([]);
             // reset order errors
             setOrderError(undefined);
@@ -91,15 +122,22 @@ const useCollectOrderForm = () => {
     };
 
     return {
+        items, // items array
+        // add item form
+        itemFields,
+        handleChangeItem,
+        handleSubmitItem,
+        // main collect order form
         orderFields,
-        items,
-        handleChange,
-        handleSubmit,
-        handleAddItem,
-        handleRemoveItem,
+        handleChangeOrder,
+        handleSubmitOrder,
+        handleRemoveItem, // remove already added item helper
         submitService: service, // service obj for submit action
-        formValidationErrors: errors, // errors of form inputs (validation)
-        orderError, // error of checking order before creating
+        errors: {
+            itemFormErrors: itemErrors,
+            mainFormErrors: orderErrors,
+            orderError, // error of checking order before creating
+        },
     };
 };
 
