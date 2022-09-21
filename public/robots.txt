@@ -1,0 +1,9 @@
+# Make whole site unreachable in dev mode
+User-agent: *
+Disallow: /
+
+# Host
+# will be provided
+
+# Sitemap
+# will be provided
