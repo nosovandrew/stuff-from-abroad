@@ -61,7 +61,7 @@ const AddItemForm = ({
 
     return (
         <Container>
-            <FormContainer onSubmit={handleSubmit}>
+            <FormContainer onSubmit={handleSubmit} autoComplete="off">
                 <InputsContainer>
                     <TextInput
                         placeholder="Ссылка"

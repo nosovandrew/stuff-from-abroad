@@ -73,7 +73,7 @@ const IndexPage = () => {
                         validationErrors: errors.itemFormErrors,
                     }}
                 />
-                <StyledForm ref={orderFormRef} onSubmit={handleSubmitOrder}>
+                <StyledForm ref={orderFormRef} onSubmit={handleSubmitOrder} autoComplete="off">
                     <OrderingUserForm
                         {...{
                             user: { tg: orderFields.tg },
