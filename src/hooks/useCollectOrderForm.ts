@@ -96,7 +96,7 @@ const useCollectOrderForm = () => {
             // throw error
             setOrderError('Добавьте хотя бы один товар');
             // remove error after 5 sec
-            setTimeout(() => setOrderError(undefined), 5000);
+            // setTimeout(() => setOrderError(undefined), 5000);
             return;
         }
         // collect order
